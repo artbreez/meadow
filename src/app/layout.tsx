@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PRISM — Client Dashboard",
+  title: "Meadow — Client Dashboard",
   description: "Influencer marketing performance dashboard",
 };
 

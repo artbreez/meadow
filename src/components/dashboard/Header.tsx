@@ -31,32 +31,13 @@ export function Header() {
       }}
     >
       {/* Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginRight: '32px', flexShrink: 0 }}>
-        <div
-          style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: '8px',
-            background: 'var(--accent)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <polygon points="7,1 13,5 13,9 7,13 1,9 1,5" fill="#0a0a0a" />
-          </svg>
-        </div>
-        <span
-          style={{
-            fontSize: '15px',
-            fontWeight: 700,
-            letterSpacing: '-0.03em',
-            color: 'var(--text-primary)',
-          }}
-        >
-          PRISM
-        </span>
+      <div style={{ display: 'flex', alignItems: 'center', marginRight: '32px', flexShrink: 0 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/meadow-logo.svg"
+          alt="Meadow"
+          style={{ height: '15px', width: 'auto', display: 'block' }}
+        />
       </div>
 
       {/* Nav */}
