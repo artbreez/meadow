@@ -10,6 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export function Button({ variant = 'secondary', size = 'md', children, icon, style, ...props }: ButtonProps) {
   const [pressed, setPressed] = useState(false)
+  const [hovered, setHovered] = useState(false)
 
   const base: React.CSSProperties = {
     display: 'inline-flex',
@@ -18,39 +19,40 @@ export function Button({ variant = 'secondary', size = 'md', children, icon, sty
     borderRadius: size === 'sm' ? '9px' : '11px',
     fontWeight: 600,
     cursor: 'pointer',
-    transition: 'all 160ms ease-out',
+    transition: 'all 150ms ease-out',
     border: 'none',
     outline: 'none',
     fontFamily: 'inherit',
     fontSize: size === 'sm' ? '13px' : '14px',
     padding: size === 'sm' ? '6px 12px' : '8px 16px',
     letterSpacing: '-0.01em',
-    transform: pressed ? 'scale(0.975)' : 'scale(1)',
+    transform: pressed ? 'scale(0.972)' : 'scale(1)',
     whiteSpace: 'nowrap',
   }
 
   const variants: Record<string, React.CSSProperties> = {
     primary: {
-      background: 'var(--accent)',
+      background: hovered ? 'var(--accent-soft)' : 'var(--accent)',
       color: '#0a0a0a',
-      boxShadow: pressed ? 'none' : '0 0 0 0 transparent',
+      boxShadow: hovered && !pressed ? '0 0 16px rgba(216,255,47,0.25)' : 'none',
     },
     secondary: {
-      background: 'var(--bg-elevated)',
-      color: 'var(--text-secondary)',
-      border: '1px solid var(--border-strong)',
+      background: hovered ? 'var(--bg-hover)' : 'var(--bg-elevated)',
+      color: hovered ? 'var(--text-primary)' : 'var(--text-secondary)',
+      border: `1px solid ${hovered ? 'rgba(255,255,255,0.12)' : 'var(--border-strong)'}`,
     },
     ghost: {
-      background: 'transparent',
-      color: 'var(--text-secondary)',
+      background: hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
+      color: hovered ? 'var(--text-secondary)' : 'var(--text-muted)',
     },
   }
 
   return (
     <button
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => { setHovered(false); setPressed(false) }}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
-      onMouseLeave={() => setPressed(false)}
       style={{ ...base, ...variants[variant], ...style }}
       {...props}
     >

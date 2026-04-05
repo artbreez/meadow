@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpDown, ArrowRight, ChevronRight } from 'lucide-react'
+import { ArrowUpDown, ChevronRight } from 'lucide-react'
 import { campaigns } from '@/lib/data'
 import { Badge } from '@/components/ui/Badge'
 import { PlatformChip } from '@/components/ui/PlatformChip'
@@ -207,15 +207,34 @@ export function CampaignTable() {
             <Cell>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Badge status={c.status} size="sm" />
-                {hovered === c.id && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -4 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    style={{ display: 'flex', alignItems: 'center' }}
-                  >
-                    <ChevronRight size={13} style={{ color: 'var(--text-muted)' }} />
-                  </motion.div>
-                )}
+                <motion.button
+                  initial={false}
+                  animate={{
+                    opacity: hovered === c.id ? 1 : 0,
+                    x: hovered === c.id ? 0 : -4,
+                  }}
+                  transition={{ duration: 0.15 }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '3px',
+                    padding: '3px 8px',
+                    borderRadius: '6px',
+                    background: 'rgba(216,255,47,0.08)',
+                    border: '1px solid rgba(216,255,47,0.2)',
+                    color: 'var(--accent)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    outline: 'none',
+                    fontFamily: 'inherit',
+                    whiteSpace: 'nowrap',
+                    pointerEvents: hovered === c.id ? 'auto' : 'none',
+                  }}
+                >
+                  View
+                  <ChevronRight size={10} />
+                </motion.button>
               </div>
             </Cell>
           </motion.div>
@@ -252,8 +271,12 @@ function ColHeader({
   align: 'left' | 'right'
 }) {
   const active = sortKey === currentKey
+  const [hovered, setHovered] = useState(false)
+
   return (
     <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -261,6 +284,7 @@ function ColHeader({
         padding: '10px 6px',
         gap: '4px',
         cursor: sortKey ? 'pointer' : 'default',
+        userSelect: 'none',
       }}
       onClick={() => sortKey && onSort(sortKey)}
     >
@@ -270,8 +294,8 @@ function ColHeader({
           fontWeight: 600,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          color: active ? 'var(--text-secondary)' : 'var(--text-faint)',
-          transition: 'color 160ms ease-out',
+          color: active ? 'var(--text-secondary)' : hovered && sortKey ? 'var(--text-muted)' : 'var(--text-faint)',
+          transition: 'color 140ms ease-out',
         }}
       >
         {label}
@@ -280,8 +304,8 @@ function ColHeader({
         <ArrowUpDown
           size={10}
           style={{
-            color: active ? 'var(--accent)' : 'var(--text-faint)',
-            transition: 'color 160ms ease-out',
+            color: active ? 'var(--accent)' : hovered ? 'var(--text-muted)' : 'var(--text-faint)',
+            transition: 'color 140ms ease-out',
           }}
         />
       )}

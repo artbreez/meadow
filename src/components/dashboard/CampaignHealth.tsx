@@ -81,6 +81,12 @@ function HealthRow({ campaign: c, index }: { campaign: typeof campaigns[0]; inde
       initial={{ opacity: 0, x: -6 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.25, delay: 0.35 + index * 0.05 }}
+      whileHover={{
+        background: 'var(--bg-elevated)',
+        borderColor: 'rgba(255,255,255,0.1)',
+        y: -1,
+        transition: { duration: 0.15 },
+      }}
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr auto auto',
@@ -90,7 +96,6 @@ function HealthRow({ campaign: c, index }: { campaign: typeof campaigns[0]; inde
         borderRadius: '11px',
         background: 'var(--bg-section)',
         border: '1px solid var(--border)',
-        transition: 'all 180ms ease-out',
         cursor: 'default',
       }}
     >
