@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Meadow — Client Dashboard",
   description: "Influencer marketing performance dashboard",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
