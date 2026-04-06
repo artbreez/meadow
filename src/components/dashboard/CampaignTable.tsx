@@ -44,6 +44,7 @@ export function CampaignTable() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+      className="rsp-sect"
       style={{ padding: '24px 32px 0' }}
     >
       <div
@@ -54,7 +55,7 @@ export function CampaignTable() {
           overflow: 'hidden',
         }}
       >
-        {/* Table header row */}
+        {/* Card title */}
         <div
           style={{
             display: 'flex',
@@ -73,6 +74,10 @@ export function CampaignTable() {
             </p>
           </div>
         </div>
+
+        {/* Scrollable table */}
+        <div className="table-scroll">
+        <div className="table-min">
 
         {/* Column headers */}
         <div
@@ -107,10 +112,10 @@ export function CampaignTable() {
               display: 'grid',
               gridTemplateColumns: '2.2fr 1fr 0.8fr 1.1fr 0.8fr 0.8fr 1fr 100px',
               padding: '0 24px',
-              borderBottom: i < sorted.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+              borderBottom: i < sorted.length - 1 ? '1px solid var(--border)' : 'none',
               alignItems: 'center',
               gap: '0',
-              background: hovered === c.id ? 'rgba(255,255,255,0.015)' : 'transparent',
+              background: hovered === c.id ? 'var(--bg-elevated)' : 'transparent',
               transition: 'background 160ms ease-out',
               cursor: 'default',
             }}
@@ -120,10 +125,10 @@ export function CampaignTable() {
               <div style={{ paddingBlock: '14px' }}>
                 <div
                   style={{
-                    fontSize: '13.5px',
+                    fontSize: '15px',
                     fontWeight: 650,
                     color: 'var(--text-primary)',
-                    letterSpacing: '-0.015em',
+                    letterSpacing: '-0.02em',
                     marginBottom: '2px',
                   }}
                 >
@@ -145,7 +150,7 @@ export function CampaignTable() {
             {/* Spend */}
             <Cell align="right">
               <div>
-                <div className="tabular-nums" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                <div className="tabular-nums" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                   {c.spent > 0 ? formatCurrency(c.spent) : '—'}
                 </div>
                 <div className="tabular-nums" style={{ fontSize: '11px', color: 'var(--text-faint)' }}>
@@ -165,7 +170,7 @@ export function CampaignTable() {
 
             {/* Creators */}
             <Cell align="right">
-              <span className="tabular-nums" style={{ fontSize: '13px', fontWeight: 600, color: c.creators > 0 ? 'var(--text-secondary)' : 'var(--text-faint)' }}>
+              <span className="tabular-nums" style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '-0.01em', color: c.creators > 0 ? 'var(--text-primary)' : 'var(--text-faint)' }}>
                 {c.creators > 0 ? c.creators : '—'}
               </span>
             </Cell>
@@ -173,7 +178,7 @@ export function CampaignTable() {
             {/* Reach */}
             <Cell align="right">
               <div>
-                <div className="tabular-nums" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                <div className="tabular-nums" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                   {c.reach > 0 ? formatNumber(c.reach) : '—'}
                 </div>
                 {c.reachTarget > 0 && c.reach > 0 && (
@@ -181,7 +186,7 @@ export function CampaignTable() {
                     className="tabular-nums"
                     style={{
                       fontSize: '11px',
-                      color: c.reach >= c.reachTarget ? '#4ade80' : '#f5a623',
+                      color: c.reach >= c.reachTarget ? 'var(--success)' : 'var(--warning)',
                     }}
                   >
                     {c.reach >= c.reachTarget ? '+' : ''}
@@ -194,7 +199,7 @@ export function CampaignTable() {
             {/* ER · CPM */}
             <Cell align="right">
               <div>
-                <div className="tabular-nums" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                <div className="tabular-nums" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                   {c.er > 0 ? formatPercent(c.er) : '—'}
                 </div>
                 <div className="tabular-nums" style={{ fontSize: '11px', color: 'var(--text-faint)' }}>
@@ -220,8 +225,8 @@ export function CampaignTable() {
                     gap: '3px',
                     padding: '3px 8px',
                     borderRadius: '6px',
-                    background: 'rgba(216,255,47,0.08)',
-                    border: '1px solid rgba(216,255,47,0.2)',
+                    background: 'var(--accent-dim)',
+                    border: '1px solid var(--accent-ring)',
                     color: 'var(--accent)',
                     fontSize: '11px',
                     fontWeight: 600,
@@ -239,6 +244,9 @@ export function CampaignTable() {
             </Cell>
           </motion.div>
         ))}
+
+        </div>{/* /table-min */}
+        </div>{/* /table-scroll */}
       </div>
     </motion.section>
   )

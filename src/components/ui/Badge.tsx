@@ -8,17 +8,17 @@ interface BadgeProps {
 }
 
 const config: Record<string, { bg: string; text: string; dot?: string; label: string }> = {
-  'on-track':     { bg: 'rgba(74,222,128,0.1)',    text: '#4ade80', dot: '#4ade80', label: 'On Track' },
-  'achieved':     { bg: 'rgba(74,222,128,0.1)',    text: '#4ade80', dot: '#4ade80', label: 'Achieved' },
-  'at-risk':      { bg: 'rgba(245,166,35,0.12)',   text: '#f5a623', dot: '#f5a623', label: 'At Risk' },
-  'below-target': { bg: 'rgba(255,107,107,0.12)',  text: '#ff6b6b', dot: '#ff6b6b', label: 'Below Target' },
-  'pending':      { bg: 'rgba(245,247,250,0.06)',  text: 'rgba(245,247,250,0.44)', dot: 'rgba(245,247,250,0.3)', label: 'Pending' },
-  'active':       { bg: 'rgba(216,255,47,0.1)',    text: '#d8ff2f', dot: '#d8ff2f', label: 'Active' },
-  'completed':    { bg: 'rgba(74,222,128,0.1)',    text: '#4ade80', dot: '#4ade80', label: 'Completed' },
-  'delayed':      { bg: 'rgba(255,107,107,0.12)',  text: '#ff6b6b', dot: '#ff6b6b', label: 'Delayed' },
-  'planning':     { bg: 'rgba(125,211,252,0.1)',   text: '#7dd3fc', dot: '#7dd3fc', label: 'Planning' },
-  'syncing':      { bg: 'rgba(125,211,252,0.1)',   text: '#7dd3fc', dot: '#7dd3fc', label: 'Syncing' },
-  'fresh':        { bg: 'rgba(74,222,128,0.1)',    text: '#4ade80', dot: '#4ade80', label: 'Live' },
+  'on-track':     { bg: 'var(--success-bg)', text: 'var(--success)', dot: 'var(--success)', label: 'On Track' },
+  'achieved':     { bg: 'var(--success-bg)', text: 'var(--success)', dot: 'var(--success)', label: 'Achieved' },
+  'at-risk':      { bg: 'var(--warning-bg)', text: 'var(--warning)', dot: 'var(--warning)', label: 'At Risk' },
+  'below-target': { bg: 'var(--danger-bg)',  text: 'var(--danger)',  dot: 'var(--danger)',  label: 'Below Target' },
+  'pending':      { bg: 'var(--border)',     text: 'var(--text-muted)', dot: 'var(--text-faint)', label: 'Pending' },
+  'active':       { bg: 'var(--accent-dim)', text: 'var(--accent)', dot: 'var(--accent)',   label: 'Active' },
+  'completed':    { bg: 'var(--success-bg)', text: 'var(--success)', dot: 'var(--success)', label: 'Completed' },
+  'delayed':      { bg: 'var(--danger-bg)',  text: 'var(--danger)',  dot: 'var(--danger)',  label: 'Delayed' },
+  'planning':     { bg: 'var(--info-bg)',    text: 'var(--info)',    dot: 'var(--info)',    label: 'Planning' },
+  'syncing':      { bg: 'var(--info-bg)',    text: 'var(--info)',    dot: 'var(--info)',    label: 'Syncing' },
+  'fresh':        { bg: 'var(--success-bg)', text: 'var(--success)', dot: 'var(--success)', label: 'Live' },
 }
 
 export function Badge({ status, label, size = 'md' }: BadgeProps) {

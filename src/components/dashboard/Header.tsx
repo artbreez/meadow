@@ -1,12 +1,13 @@
 'use client'
 import { useRef, useState } from 'react'
-import { Bell, Download, ChevronDown, Calendar, LayoutDashboard, Users, BarChart3, FileText, Settings } from 'lucide-react'
+import { Bell, Download, ChevronDown, Calendar } from 'lucide-react'
 import { DropdownPanel } from '@/components/ui/DropdownPanel'
 import { BrandDropdown } from '@/components/ui/BrandDropdown'
 import { DateRangeDropdown } from '@/components/ui/DateRangeDropdown'
 import { ExportDropdown } from '@/components/ui/ExportDropdown'
 import { NotificationsDropdown } from '@/components/ui/NotificationsDropdown'
 import { UserMenuDropdown } from '@/components/ui/UserMenuDropdown'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 type Panel = 'brand' | 'date' | 'export' | 'notif' | 'user' | null
 
@@ -42,7 +43,7 @@ export function Header() {
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          background: 'rgba(5,5,5,0.9)',
+          background: 'var(--header-bg)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid var(--border)',
@@ -54,12 +55,11 @@ export function Header() {
       >
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', marginRight: '32px', flexShrink: 0 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/meadow-logo.svg" alt="Meadow" style={{ height: '15px', width: 'auto', display: 'block' }} />
+          <MeadowLogo />
         </div>
 
         {/* Nav */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1 }}>
+        <nav className="header-nav" style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1 }}>
           {navItems.map(({ label, active }) => (
             <button
               key={label}
@@ -69,9 +69,9 @@ export function Header() {
                 padding: '6px 12px',
                 borderRadius: '8px',
                 background: active
-                  ? 'rgba(216,255,47,0.09)'
+                  ? 'var(--accent-dim)'
                   : navHover === label
-                  ? 'rgba(255,255,255,0.05)'
+                  ? 'var(--bg-elevated)'
                   : 'transparent',
                 color: active ? 'var(--accent)' : navHover === label ? 'var(--text-secondary)' : 'var(--text-muted)',
                 fontSize: '13.5px',
@@ -91,46 +91,52 @@ export function Header() {
 
         {/* Right controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-          {/* Brand selector */}
-          <HeaderButton
-            ref={brandRef}
-            onClick={() => toggle('brand')}
-            active={open === 'brand'}
-          >
-            <span
-              style={{
-                width: '16px',
-                height: '16px',
-                borderRadius: '4px',
-                background: 'var(--accent-glow)',
-                border: '1px solid rgba(216,255,47,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '8px',
-                fontWeight: 700,
-                color: 'var(--accent)',
-                flexShrink: 0,
-              }}
+          {/* Brand / Date / Export — hidden on mobile */}
+          <div className="header-text-btns" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {/* Brand selector */}
+            <HeaderButton
+              ref={brandRef}
+              onClick={() => toggle('brand')}
+              active={open === 'brand'}
             >
-              {selectedBrand === 'All Brands' ? 'AB' : selectedBrand.slice(0, 2).toUpperCase()}
-            </span>
-            <span>{selectedBrand}</span>
-            <ChevronDown size={12} style={{ color: 'var(--text-muted)', marginLeft: '1px' }} />
-          </HeaderButton>
+              <span
+                style={{
+                  width: '16px',
+                  height: '16px',
+                  borderRadius: '4px',
+                  background: 'var(--accent-fill)',
+                  border: '1px solid var(--accent-ring)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '8px',
+                  fontWeight: 700,
+                  color: 'var(--accent)',
+                  flexShrink: 0,
+                }}
+              >
+                {selectedBrand === 'All Brands' ? 'AB' : selectedBrand.slice(0, 2).toUpperCase()}
+              </span>
+              <span>{selectedBrand}</span>
+              <ChevronDown size={12} style={{ color: 'var(--text-muted)', marginLeft: '1px' }} />
+            </HeaderButton>
 
-          {/* Date range */}
-          <HeaderButton ref={dateRef} onClick={() => toggle('date')} active={open === 'date'}>
-            <Calendar size={13} style={{ color: open === 'date' ? 'var(--accent)' : 'var(--text-muted)' }} />
-            <span>{dateLabel}</span>
-            <ChevronDown size={12} style={{ color: 'var(--text-muted)', marginLeft: '1px' }} />
-          </HeaderButton>
+            {/* Date range */}
+            <HeaderButton ref={dateRef} onClick={() => toggle('date')} active={open === 'date'}>
+              <Calendar size={13} style={{ color: open === 'date' ? 'var(--accent)' : 'var(--text-muted)' }} />
+              <span>{dateLabel}</span>
+              <ChevronDown size={12} style={{ color: 'var(--text-muted)', marginLeft: '1px' }} />
+            </HeaderButton>
 
-          {/* Export */}
-          <HeaderButton ref={exportRef} onClick={() => toggle('export')} active={open === 'export'}>
-            <Download size={13} />
-            <span>Export</span>
-          </HeaderButton>
+            {/* Export */}
+            <HeaderButton ref={exportRef} onClick={() => toggle('export')} active={open === 'export'}>
+              <Download size={13} />
+              <span>Export</span>
+            </HeaderButton>
+          </div>
+
+          {/* Theme toggle */}
+          <ThemeToggle />
 
           {/* Notifications */}
           <IconButton
@@ -150,10 +156,8 @@ export function Header() {
               width: '34px',
               height: '34px',
               borderRadius: '50%',
-              background: open === 'user'
-                ? 'linear-gradient(135deg, #3a3d40 0%, #2a2d30 100%)'
-                : 'linear-gradient(135deg, #2a2d30 0%, #1a1d20 100%)',
-              border: `1.5px solid ${open === 'user' ? 'rgba(216,255,47,0.3)' : 'rgba(255,255,255,0.12)'}`,
+              background: open === 'user' ? 'var(--bg-hover)' : 'var(--bg-elevated)',
+              border: `1.5px solid ${open === 'user' ? 'var(--accent-ring)' : 'var(--border-strong)'}`,
               color: 'var(--text-secondary)',
               cursor: 'pointer',
               display: 'flex',
@@ -202,6 +206,23 @@ export function Header() {
   )
 }
 
+// ── Logo ──────────────────────────────────────────────────────────────────────
+
+function MeadowLogo() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 150 19.001"
+      overflow="visible"
+      style={{ height: '15px', width: 'auto', display: 'block' }}
+      className="logo-svg"
+      aria-label="Meadow"
+    >
+      <path d="M 26.614 0.424 L 26.614 18.518 C 26.614 18.752 26.425 18.942 26.19 18.942 L 22.944 18.942 C 22.71 18.942 22.52 18.752 22.52 18.518 L 22.52 1.894 C 22.52 1.649 22.728 1.455 22.973 1.472 L 22.993 1.473 C 23.289 1.494 23.473 1.804 23.348 2.074 L 15.633 18.696 C 15.564 18.846 15.414 18.942 15.248 18.942 L 11.367 18.942 C 11.201 18.941 11.05 18.845 10.982 18.697 L 3.261 2.109 C 3.138 1.844 3.314 1.536 3.605 1.509 C 3.854 1.485 4.069 1.681 4.069 1.931 L 4.069 18.518 C 4.069 18.752 3.88 18.942 3.645 18.942 L 0.424 18.942 C 0.19 18.942 0 18.752 0 18.518 L 0 0.424 C 0 0.19 0.19 0 0.424 0 L 6.323 0 C 6.489 0 6.641 0.098 6.709 0.25 L 13.959 16.273 C 14.086 16.553 13.881 16.871 13.573 16.871 L 13.041 16.871 C 12.733 16.871 12.528 16.553 12.655 16.273 L 19.905 0.25 C 19.973 0.098 20.124 0 20.291 0 L 26.19 0 C 26.424 0 26.614 0.19 26.614 0.424 Z M 35.448 9.537 L 34.335 16.611 C 34.28 16.966 33.836 17.095 33.598 16.825 L 32.945 16.084 C 32.704 15.811 32.899 15.381 33.264 15.381 L 46.51 15.381 C 46.744 15.381 46.934 15.571 46.934 15.804 L 46.934 18.518 C 46.934 18.752 46.744 18.942 46.51 18.942 L 30.368 18.942 C 30.108 18.942 29.91 18.71 29.949 18.453 L 31.33 9.536 C 31.337 9.493 31.337 9.449 31.33 9.406 L 29.949 0.489 C 29.909 0.232 30.108 0 30.368 0 L 46.384 0 C 46.618 0 46.808 0.19 46.808 0.424 L 46.808 3.138 C 46.808 3.371 46.618 3.561 46.384 3.561 L 33.264 3.561 C 32.899 3.561 32.705 3.131 32.946 2.857 L 33.599 2.116 C 33.836 1.847 34.28 1.976 34.336 2.33 L 35.449 9.405 C 35.456 9.448 35.456 9.493 35.449 9.537 Z M 46.15 8.253 L 46.15 10.689 C 46.15 10.923 45.96 11.112 45.726 11.112 L 33.002 11.112 C 32.768 11.112 32.578 10.923 32.578 10.689 L 32.578 8.253 C 32.578 8.019 32.768 7.83 33.002 7.83 L 45.726 7.83 C 45.96 7.83 46.15 8.019 46.15 8.253 Z M 62.466 0.244 L 70.94 18.339 C 71.072 18.619 70.866 18.942 70.556 18.942 L 66.922 18.942 C 66.754 18.941 66.602 18.843 66.535 18.692 L 59.158 2.341 C 59.032 2.06 59.237 1.743 59.545 1.743 L 59.648 1.743 C 59.956 1.743 60.161 2.06 60.035 2.34 L 52.658 18.692 C 52.591 18.843 52.439 18.941 52.271 18.942 L 48.637 18.942 C 48.327 18.942 48.122 18.619 48.253 18.339 L 56.727 0.244 C 56.797 0.096 56.947 0 57.111 0 L 62.082 0 C 62.246 0 62.396 0.095 62.465 0.244 Z M 52.924 14.528 L 52.924 11.89 C 52.924 11.657 53.114 11.467 53.348 11.467 L 65.642 11.467 C 65.876 11.467 66.066 11.657 66.066 11.89 L 66.066 14.528 C 66.066 14.762 65.876 14.952 65.642 14.952 L 53.348 14.952 C 53.114 14.952 52.924 14.762 52.924 14.528 Z M 82.266 0 C 84.473 0 86.407 0.396 88.066 1.187 C 89.726 1.979 91.019 3.081 91.946 4.496 C 92.872 5.91 93.336 7.569 93.336 9.471 C 93.336 11.373 92.872 13.011 91.946 14.433 C 91.019 15.857 89.726 16.963 88.066 17.755 C 86.407 18.546 84.472 18.942 82.266 18.942 L 73.692 18.942 C 73.458 18.942 73.268 18.752 73.268 18.518 L 73.268 0.424 C 73.268 0.19 73.458 0 73.692 0 Z M 76.821 16.557 L 76.122 15.882 C 75.847 15.617 76.035 15.154 76.416 15.154 L 82.595 15.154 C 83.875 15.154 84.999 14.918 85.969 14.446 C 86.938 13.975 87.683 13.31 88.206 12.451 C 88.728 11.593 88.989 10.599 88.989 9.471 C 88.989 8.343 88.728 7.329 88.206 6.478 C 87.683 5.628 86.938 4.967 85.969 4.496 C 84.999 4.024 83.875 3.788 82.595 3.788 L 76.416 3.788 C 76.035 3.788 75.847 3.325 76.122 3.06 L 76.821 2.385 C 77.091 2.126 77.539 2.316 77.539 2.69 L 77.539 16.252 C 77.539 16.626 77.091 16.816 76.821 16.557 Z M 141.245 17.199 L 140.949 17.199 C 140.664 17.199 140.46 16.924 140.544 16.651 L 145.566 0.3 C 145.619 0.123 145.784 0.001 145.972 0 L 149.575 0 C 149.863 0 150.067 0.28 149.979 0.554 L 144.16 18.648 C 144.103 18.823 143.941 18.942 143.756 18.942 L 138.881 18.942 C 138.7 18.941 138.54 18.828 138.482 18.66 L 132.818 2.738 C 132.72 2.463 132.925 2.173 133.218 2.173 L 133.886 2.173 C 134.179 2.173 134.384 2.462 134.285 2.738 L 128.622 18.66 C 128.564 18.828 128.404 18.941 128.223 18.942 L 123.347 18.942 C 123.162 18.941 122.998 18.822 122.944 18.648 L 117.125 0.553 C 117.038 0.28 117.242 0 117.529 0 L 121.182 0 C 121.368 0 121.533 0.122 121.588 0.301 L 126.558 16.642 C 126.642 16.917 126.433 17.194 126.145 17.188 L 125.897 17.184 C 125.609 17.179 125.41 16.894 125.504 16.621 L 131.178 0.285 C 131.236 0.116 131.397 0.002 131.579 0.001 L 135.55 0.001 C 135.73 0.001 135.891 0.115 135.951 0.285 L 141.646 16.637 C 141.742 16.912 141.537 17.2 141.245 17.2 Z M 105.169 2.793 L 105.169 3.568 L 105.168 3.568 C 103.578 3.568 102.138 4.212 101.095 5.254 C 100.052 6.295 99.408 7.734 99.408 9.324 C 99.408 9.406 99.409 9.488 99.413 9.569 L 98.387 9.569 C 96.92 9.569 95.73 8.38 95.73 6.914 L 95.73 2.793 C 95.73 1.326 96.92 0.138 98.387 0.138 L 102.512 0.138 C 103.979 0.138 105.169 1.326 105.169 2.793 Z M 114.607 2.793 L 114.607 6.914 C 114.607 8.381 113.418 9.569 111.95 9.569 L 110.925 9.569 C 110.928 9.488 110.93 9.406 110.93 9.324 C 110.93 6.145 108.351 3.567 105.169 3.567 L 105.169 2.792 C 105.169 1.326 106.358 0.138 107.826 0.138 L 111.95 0.138 C 113.418 0.138 114.607 1.326 114.607 2.793 Z M 105.169 15.081 L 105.169 16.346 C 105.169 17.812 103.979 19 102.512 19 L 98.387 19 C 96.92 19 95.73 17.812 95.73 16.346 L 95.73 12.224 C 95.73 10.758 96.92 9.569 98.387 9.569 L 99.413 9.569 C 99.541 12.635 102.069 15.081 105.168 15.081 Z M 114.607 12.224 L 114.607 16.346 C 114.607 17.812 113.418 19.001 111.95 19.001 L 107.826 19.001 C 106.358 19.001 105.169 17.812 105.169 16.346 L 105.169 15.082 C 106.76 15.082 108.2 14.437 109.243 13.395 C 110.268 12.368 110.868 11.005 110.925 9.569 L 111.95 9.569 C 113.418 9.569 114.607 10.758 114.607 12.224 Z" fill="rgb(211,255,49)" />
+    </svg>
+  )
+}
+
 // ── Shared header button primitives ───────────────────────────────────────────
 
 import React from 'react'
@@ -223,20 +244,16 @@ const HeaderButton = React.forwardRef<
         gap: '6px',
         padding: '6px 11px',
         borderRadius: '9px',
-        background: active
-          ? 'rgba(216,255,47,0.07)'
-          : hovered
-          ? 'rgba(255,255,255,0.05)'
-          : 'var(--bg-card)',
-        border: `1px solid ${active ? 'rgba(216,255,47,0.2)' : hovered ? 'rgba(255,255,255,0.1)' : 'var(--border)'}`,
-        color: active ? 'var(--accent)' : 'var(--text-secondary)',
+        background: active ? 'var(--accent-dim)' : hovered ? 'var(--bg-hover)' : 'var(--bg-card)',
+        border: `1px solid ${active ? 'var(--accent-ring)' : hovered ? 'var(--border-strong)' : 'var(--border)'}`,
+        color: active ? 'var(--accent)' : hovered ? 'var(--text-primary)' : 'var(--text-secondary)',
         fontSize: '13px',
         fontWeight: 500,
         cursor: 'pointer',
         outline: 'none',
         fontFamily: 'inherit',
         transition: 'all 140ms ease-out',
-        boxShadow: active ? '0 0 10px rgba(216,255,47,0.12)' : 'none',
+        boxShadow: active ? '0 0 10px var(--accent-glow)' : 'none',
         whiteSpace: 'nowrap',
       }}
     >
@@ -262,12 +279,8 @@ const IconButton = React.forwardRef<
         width: '34px',
         height: '34px',
         borderRadius: '9px',
-        background: active
-          ? 'rgba(216,255,47,0.07)'
-          : hovered
-          ? 'rgba(255,255,255,0.05)'
-          : 'var(--bg-card)',
-        border: `1px solid ${active ? 'rgba(216,255,47,0.2)' : hovered ? 'rgba(255,255,255,0.1)' : 'var(--border)'}`,
+        background: active ? 'var(--accent-dim)' : hovered ? 'var(--bg-hover)' : 'var(--bg-card)',
+        border: `1px solid ${active ? 'var(--accent-ring)' : hovered ? 'var(--border-strong)' : 'var(--border)'}`,
         color: active ? 'var(--accent)' : hovered ? 'var(--text-secondary)' : 'var(--text-muted)',
         cursor: 'pointer',
         display: 'flex',

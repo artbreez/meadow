@@ -19,8 +19,8 @@ export function FilterChip({ label, value, active, onClick, dropdown = true }: F
         gap: '5px',
         padding: '6px 11px',
         borderRadius: '9px',
-        background: active ? 'var(--accent-glow)' : 'var(--bg-card)',
-        border: `1px solid ${active ? 'rgba(216,255,47,0.3)' : 'var(--border)'}`,
+        background: active ? 'var(--accent-fill)' : 'var(--bg-card)',
+        border: `1px solid ${active ? 'var(--accent-ring)' : 'var(--border)'}`,
         color: active ? 'var(--accent)' : 'var(--text-secondary)',
         fontSize: '13px',
         fontWeight: 500,
@@ -29,10 +29,10 @@ export function FilterChip({ label, value, active, onClick, dropdown = true }: F
         outline: 'none',
         fontFamily: 'inherit',
         whiteSpace: 'nowrap',
-        boxShadow: active ? '0 0 10px var(--accent-glow)' : 'none',
+        boxShadow: 'none',
       }}
     >
-      <span style={{ color: active ? 'var(--accent-soft)' : 'var(--text-muted)', fontSize: '11px', fontWeight: 500 }}>
+      <span style={{ color: active ? 'var(--accent)' : 'var(--text-muted)', fontSize: '11px', fontWeight: 500 }}>
         {label}
       </span>
       {value && (

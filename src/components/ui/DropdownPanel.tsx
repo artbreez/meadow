@@ -14,13 +14,7 @@ interface DropdownPanelProps {
 }
 
 export function DropdownPanel({
-  isOpen,
-  onClose,
-  anchorRef,
-  children,
-  width = 220,
-  align = 'left',
-  offsetY = 6,
+  isOpen, onClose, anchorRef, children, width = 220, align = 'left', offsetY = 6,
 }: DropdownPanelProps) {
   const [mounted, setMounted] = useState(false)
   const [pos, setPos] = useState({ top: 0, left: 0 })
@@ -32,33 +26,22 @@ export function DropdownPanel({
     if (!isOpen || !anchorRef.current) return
     const rect = anchorRef.current.getBoundingClientRect()
     const top = rect.bottom + offsetY
-    const left =
-      align === 'right'
-        ? Math.max(8, rect.right - width)
-        : Math.min(rect.left, window.innerWidth - width - 8)
+    const left = align === 'right'
+      ? Math.max(8, rect.right - width)
+      : Math.min(rect.left, window.innerWidth - width - 8)
     setPos({ top, left })
   }, [isOpen, anchorRef, align, width, offsetY])
 
   useEffect(() => {
     if (!isOpen) return
     const handler = (e: MouseEvent) => {
-      const target = e.target as Node
-      if (
-        !panelRef.current?.contains(target) &&
-        !anchorRef.current?.contains(target)
-      ) {
-        onClose()
-      }
+      const t = e.target as Node
+      if (!panelRef.current?.contains(t) && !anchorRef.current?.contains(t)) onClose()
     }
-    const escHandler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('mousedown', handler)
-    document.addEventListener('keydown', escHandler)
-    return () => {
-      document.removeEventListener('mousedown', handler)
-      document.removeEventListener('keydown', escHandler)
-    }
+    document.addEventListener('keydown', esc)
+    return () => { document.removeEventListener('mousedown', handler); document.removeEventListener('keydown', esc) }
   }, [isOpen, onClose, anchorRef])
 
   if (!mounted) return null
@@ -79,9 +62,9 @@ export function DropdownPanel({
             zIndex: 9999,
             width,
             background: 'var(--bg-elevated)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--border-strong)',
             borderRadius: '14px',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.03)',
+            boxShadow: 'var(--shadow-dropdown)',
             overflow: 'hidden',
           }}
         >
@@ -93,29 +76,18 @@ export function DropdownPanel({
   )
 }
 
-// ── Shared dropdown primitives ────────────────────────────────────────────────
+// ── Shared dropdown primitives ──────────────────────────────────
 
 export function DropdownSection({ children, border = true }: { children: React.ReactNode; border?: boolean }) {
   return (
-    <div
-      style={{
-        padding: '6px',
-        borderBottom: border ? '1px solid rgba(255,255,255,0.06)' : 'none',
-      }}
-    >
+    <div style={{ padding: '6px', borderBottom: border ? '1px solid var(--border)' : 'none' }}>
       {children}
     </div>
   )
 }
 
 export function DropdownItem({
-  icon,
-  label,
-  sub,
-  onClick,
-  danger,
-  selected,
-  right,
+  icon, label, sub, onClick, danger, selected, right,
 }: {
   icon?: React.ReactNode
   label: string
@@ -140,18 +112,14 @@ export function DropdownItem({
         padding: '8px 10px',
         borderRadius: '9px',
         background: hovered
-          ? selected
-            ? 'rgba(216,255,47,0.1)'
-            : 'rgba(255,255,255,0.05)'
-          : selected
-          ? 'rgba(216,255,47,0.06)'
-          : 'transparent',
+          ? selected ? 'var(--accent-fill)' : 'var(--bg-hover)'
+          : selected ? 'var(--accent-dim)' : 'transparent',
         border: 'none',
         cursor: 'pointer',
         outline: 'none',
         fontFamily: 'inherit',
         textAlign: 'left',
-        transition: 'background 140ms ease-out',
+        transition: 'background 130ms ease-out',
       }}
     >
       {icon && (
@@ -162,13 +130,7 @@ export function DropdownItem({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: danger
-              ? '#ff6b6b'
-              : selected
-              ? 'var(--accent)'
-              : hovered
-              ? 'var(--text-secondary)'
-              : 'var(--text-muted)',
+            color: danger ? 'var(--danger)' : selected ? 'var(--accent)' : hovered ? 'var(--text-secondary)' : 'var(--text-muted)',
             flexShrink: 0,
             transition: 'color 130ms ease-out',
           }}
@@ -181,13 +143,7 @@ export function DropdownItem({
           style={{
             fontSize: '13px',
             fontWeight: selected ? 600 : hovered ? 500 : 450,
-            color: danger
-              ? '#ff6b6b'
-              : selected
-              ? 'var(--accent)'
-              : hovered
-              ? 'var(--text-primary)'
-              : 'var(--text-secondary)',
+            color: danger ? 'var(--danger)' : selected ? 'var(--accent)' : hovered ? 'var(--text-primary)' : 'var(--text-secondary)',
             lineHeight: 1.3,
             transition: 'color 130ms ease-out',
           }}
@@ -212,30 +168,13 @@ export function DropdownItem({
 
 export function DropdownLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        padding: '6px 10px 3px',
-        fontSize: '10px',
-        fontWeight: 600,
-        letterSpacing: '0.06em',
-        textTransform: 'uppercase',
-        color: 'var(--text-faint)',
-      }}
-    >
+    <div style={{ padding: '6px 10px 3px', fontSize: '10px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-faint)' }}>
       {children}
     </div>
   )
 }
 
-export function DropdownSearch({
-  value,
-  onChange,
-  placeholder = 'Search…',
-}: {
-  value: string
-  onChange: (v: string) => void
-  placeholder?: string
-}) {
+export function DropdownSearch({ value, onChange, placeholder = 'Search…' }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
   return (
     <div style={{ padding: '8px 8px 4px' }}>
       <div
@@ -245,13 +184,13 @@ export function DropdownSearch({
           gap: '7px',
           padding: '6px 10px',
           borderRadius: '8px',
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border)',
         }}
       >
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <circle cx="5" cy="5" r="3.5" stroke="rgba(245,247,250,0.35)" strokeWidth="1.2" />
-          <path d="M8 8l2.5 2.5" stroke="rgba(245,247,250,0.35)" strokeWidth="1.2" strokeLinecap="round" />
+          <circle cx="5" cy="5" r="3.5" stroke="var(--text-muted)" strokeWidth="1.2" />
+          <path d="M8 8l2.5 2.5" stroke="var(--text-muted)" strokeWidth="1.2" strokeLinecap="round" />
         </svg>
         <input
           value={value}

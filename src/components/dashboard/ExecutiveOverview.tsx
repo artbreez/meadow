@@ -12,16 +12,9 @@ const creatorDelta = formatDelta(summaryMetrics.totalCreators, summaryMetrics.pr
 
 export function ExecutiveOverview() {
   return (
-    <section style={{ padding: '28px 32px 0' }}>
+    <section className="rsp-sect" style={{ padding: '28px 32px 0' }}>
       {/* Metrics grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '12px',
-          marginBottom: '16px',
-        }}
-      >
+      <div className="grid-metrics">
         <MetricCard
           index={0}
           label="Total Spend"
@@ -80,15 +73,12 @@ function InsightStrip() {
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+      className="insight-strip"
       style={{
         background: 'var(--bg-card)',
         border: '1px solid var(--border)',
         borderRadius: '14px',
         padding: '14px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        flexWrap: 'wrap',
       }}
     >
       {/* AI tag */}
@@ -99,8 +89,8 @@ function InsightStrip() {
           gap: '6px',
           padding: '3px 9px',
           borderRadius: '6px',
-          background: 'var(--accent-glow)',
-          border: '1px solid rgba(216,255,47,0.2)',
+          background: 'var(--accent-dim)',
+          border: '1px solid var(--accent-ring)',
           flexShrink: 0,
         }}
       >
@@ -121,24 +111,16 @@ function InsightStrip() {
       <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.55, flex: 1, margin: 0 }}>
         <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>3 campaigns are active.</span>{' '}
         Reach is{' '}
-        <span style={{ color: '#4ade80', fontWeight: 600 }}>14% above plan</span>
+        <span style={{ color: 'var(--success)', fontWeight: 600 }}>14% above plan</span>
         , led by Spring Skincare Launch at 48.2M. Back to Routine is{' '}
-        <span style={{ color: '#f5a623', fontWeight: 600 }}>below ER target</span>{' '}
+        <span style={{ color: 'var(--warning)', fontWeight: 600 }}>below ER target</span>{' '}
         — only 62% of creators have posted.{' '}
         <span style={{ color: 'var(--text-muted)' }}>TikTok metrics syncing — final numbers may shift.</span>
       </p>
 
-      <div
-        style={{
-          display: 'flex',
-          gap: '16px',
-          flexShrink: 0,
-          borderLeft: '1px solid var(--border)',
-          paddingLeft: '16px',
-        }}
-      >
-        <Stat label="On Track" value="2" color="#4ade80" />
-        <Stat label="At Risk" value="1" color="#f5a623" />
+      <div className="insight-strip-stats">
+        <Stat label="On Track" value="2" color="var(--success)" />
+        <Stat label="At Risk" value="1" color="var(--warning)" />
         <Stat label="Completed" value="1" color="var(--text-muted)" />
       </div>
     </motion.div>

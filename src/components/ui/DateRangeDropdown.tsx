@@ -21,7 +21,7 @@ function ApplyButton({ onClick }: { onClick: () => void }) {
         cursor: 'pointer',
         fontFamily: 'inherit',
         transition: 'background 130ms ease-out, box-shadow 130ms ease-out',
-        boxShadow: hovered ? '0 0 14px rgba(216,255,47,0.25)' : 'none',
+        boxShadow: hovered ? '0 0 14px var(--accent-glow-strong)' : 'none',
         width: '100%',
       }}
     >
@@ -74,15 +74,15 @@ export function DateRangeDropdown({ selected, onSelect }: DateRangeDropdownProps
               value={fromVal}
               onChange={e => setFromVal(e.target.value)}
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
                 borderRadius: '7px',
                 padding: '5px 8px',
                 color: 'var(--text-secondary)',
                 fontSize: '12px',
                 outline: 'none',
                 fontFamily: 'inherit',
-                colorScheme: 'dark',
+                width: '100%',
               }}
             />
           </div>
@@ -93,15 +93,15 @@ export function DateRangeDropdown({ selected, onSelect }: DateRangeDropdownProps
               value={toVal}
               onChange={e => setToVal(e.target.value)}
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
                 borderRadius: '7px',
                 padding: '5px 8px',
                 color: 'var(--text-secondary)',
                 fontSize: '12px',
                 outline: 'none',
                 fontFamily: 'inherit',
-                colorScheme: 'dark',
+                width: '100%',
               }}
             />
           </div>

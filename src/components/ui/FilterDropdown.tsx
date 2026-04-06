@@ -114,7 +114,7 @@ function Count({ n, selected }: { n: number; selected: boolean }) {
         fontSize: '11px',
         fontWeight: 600,
         color: selected ? 'var(--accent)' : 'var(--text-faint)',
-        background: selected ? 'var(--accent-glow)' : 'rgba(255,255,255,0.04)',
+        background: selected ? 'var(--accent-dim)' : 'var(--bg-hover)',
         padding: '1px 6px',
         borderRadius: '4px',
         minWidth: '22px',

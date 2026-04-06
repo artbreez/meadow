@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion'
 import { campaigns } from '@/lib/data'
 import { Badge } from '@/components/ui/Badge'
+import { useMouseGlow } from '@/lib/useMouseGlow'
 import { PlatformChip } from '@/components/ui/PlatformChip'
 import { formatNumber, formatPercent } from '@/lib/utils'
 import type { CampaignStatus } from '@/lib/types'
@@ -55,9 +56,9 @@ export function CampaignHealth() {
 
 function StatusCount({ status, count }: { status: CampaignStatus; count: number }) {
   const colors: Partial<Record<CampaignStatus, string>> = {
-    active: '#d8ff2f',
-    'at-risk': '#f5a623',
-    completed: '#4ade80',
+    active: 'var(--accent)',
+    'at-risk': 'var(--warning)',
+    completed: 'var(--success)',
   }
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -83,8 +84,7 @@ function HealthRow({ campaign: c, index }: { campaign: typeof campaigns[0]; inde
       transition={{ duration: 0.25, delay: 0.35 + index * 0.05 }}
       whileHover={{
         background: 'var(--bg-elevated)',
-        borderColor: 'rgba(255,255,255,0.1)',
-        y: -1,
+        borderColor: 'var(--border-strong)',
         transition: { duration: 0.15 },
       }}
       style={{
@@ -104,10 +104,10 @@ function HealthRow({ campaign: c, index }: { campaign: typeof campaigns[0]; inde
         <div style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: '5px', flexWrap: 'wrap' }}>
           <span
             style={{
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 650,
               color: 'var(--text-primary)',
-              letterSpacing: '-0.015em',
+              letterSpacing: '-0.02em',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -123,9 +123,9 @@ function HealthRow({ campaign: c, index }: { campaign: typeof campaigns[0]; inde
           <div
             style={{
               flex: 1,
-              height: '4px',
+              height: '2px',
               borderRadius: '2px',
-              background: 'var(--bg-elevated)',
+              background: 'var(--border)',
               overflow: 'hidden',
             }}
           >
@@ -138,12 +138,12 @@ function HealthRow({ campaign: c, index }: { campaign: typeof campaigns[0]; inde
                 borderRadius: '2px',
                 background:
                   c.status === 'at-risk'
-                    ? '#f5a623'
+                    ? 'var(--warning-bg)'
                     : c.status === 'completed'
-                    ? '#4ade80'
+                    ? 'var(--success-bg)'
                     : c.status === 'planning'
-                    ? 'var(--text-faint)'
-                    : 'var(--accent)',
+                    ? 'var(--border)'
+                    : 'var(--accent-ring)',
               }}
             />
           </div>
@@ -155,10 +155,10 @@ function HealthRow({ campaign: c, index }: { campaign: typeof campaigns[0]; inde
 
       {/* Middle: KPIs + stats */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px' }}>
-        <span className="tabular-nums" style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+        <span className="tabular-nums" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
           {c.status === 'planning' ? 'Planned' : formatNumber(c.reach)}
         </span>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
           {c.status === 'planning' ? `target ${formatNumber(c.reachTarget)}` : `of ${formatNumber(c.reachTarget)}`}
         </span>
       </div>

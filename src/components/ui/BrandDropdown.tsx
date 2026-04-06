@@ -41,7 +41,7 @@ export function BrandDropdown({ selected, onSelect }: BrandDropdownProps) {
                   style={{
                     fontSize: '11px',
                     color: meta.active > 0 ? 'var(--accent)' : 'var(--text-faint)',
-                    background: meta.active > 0 ? 'var(--accent-glow)' : 'rgba(255,255,255,0.04)',
+                    background: meta.active > 0 ? 'var(--accent-dim)' : 'var(--bg-hover)',
                     padding: '1px 6px',
                     borderRadius: '4px',
                     fontWeight: 600,

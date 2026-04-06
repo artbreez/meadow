@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { geographyData } from '@/lib/data'
 import { formatNumber, formatPercent } from '@/lib/utils'
+import { useMouseGlow } from '@/lib/useMouseGlow'
 
 const maxReach = geographyData[0].reach
 
@@ -59,7 +60,7 @@ export function GeographyPanel() {
                     height: '18px',
                     borderRadius: '4px',
                     background: isTop ? 'var(--accent-glow)' : 'var(--bg-elevated)',
-                    border: `1px solid ${isTop ? 'rgba(216,255,47,0.25)' : 'var(--border)'}`,
+                    border: `1px solid ${isTop ? 'var(--accent-ring)' : 'var(--border)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -119,7 +120,7 @@ export function GeographyPanel() {
 }
 
 function TrendIndicator({ trend }: { trend: 'up' | 'down' | 'flat' }) {
-  if (trend === 'up') return <TrendingUp size={12} style={{ color: '#4ade80', flexShrink: 0 }} />
-  if (trend === 'down') return <TrendingDown size={12} style={{ color: '#ff6b6b', flexShrink: 0 }} />
+  if (trend === 'up') return <TrendingUp size={12} style={{ color: 'var(--success)', flexShrink: 0 }} />
+  if (trend === 'down') return <TrendingDown size={12} style={{ color: 'var(--danger)', flexShrink: 0 }} />
   return <Minus size={12} style={{ color: 'var(--text-faint)', flexShrink: 0 }} />
 }

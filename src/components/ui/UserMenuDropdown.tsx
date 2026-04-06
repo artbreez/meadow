@@ -13,7 +13,7 @@ export function UserMenuDropdown({ onClose }: UserMenuDropdownProps) {
       <div
         style={{
           padding: '12px 14px',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          borderBottom: '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
@@ -24,8 +24,8 @@ export function UserMenuDropdown({ onClose }: UserMenuDropdownProps) {
             width: '34px',
             height: '34px',
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #2a2d30 0%, #1a1d20 100%)',
-            border: '1.5px solid rgba(255,255,255,0.12)',
+            background: 'var(--bg-elevated)',
+            border: '1.5px solid var(--border-strong)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

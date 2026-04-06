@@ -122,6 +122,7 @@ export function PageIntro() {
 
   return (
     <div
+      className="rsp-pad"
       style={{
         paddingInline: '32px',
         paddingTop: '28px',
@@ -142,6 +143,7 @@ export function PageIntro() {
       >
         <div>
           <h1
+            className="page-title"
             style={{
               fontSize: '26px',
               fontWeight: 700,
@@ -159,7 +161,7 @@ export function PageIntro() {
         </div>
 
         {/* Status badges */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', overflowX: 'auto', WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'] }}>
           <StatusChip>
             <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>Period</span>
             <span style={{ fontWeight: 600 }}>Jan 1 – Mar 31, 2025</span>
@@ -180,7 +182,7 @@ export function PageIntro() {
       </div>
 
       {/* Filter bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'], paddingBottom: '2px' }}>
         <span style={{ fontSize: '12px', color: 'var(--text-faint)', marginRight: '4px', fontWeight: 500 }}>
           Filters
         </span>
@@ -289,19 +291,19 @@ const FilterChipButton = React.forwardRef<
         paddingRight: onClear ? '7px' : '10px',
         borderRadius: '9px',
         background: open
-          ? 'rgba(216,255,47,0.09)'
+          ? 'var(--accent-fill)'
           : active
-          ? 'rgba(216,255,47,0.06)'
+          ? 'var(--accent-dim)'
           : hovered
-          ? '#1e2226'
+          ? 'var(--bg-hover)'
           : 'var(--bg-card)',
         border: `1px solid ${
           open
-            ? 'rgba(216,255,47,0.35)'
+            ? 'var(--accent-ring-focus)'
             : active
-            ? 'rgba(216,255,47,0.2)'
+            ? 'var(--accent-ring)'
             : hovered
-            ? 'rgba(255,255,255,0.16)'
+            ? 'var(--border-strong)'
             : 'var(--border)'
         }`,
         color: open || active ? 'var(--accent)' : hovered ? '#f5f7fa' : 'var(--text-secondary)',
@@ -312,12 +314,12 @@ const FilterChipButton = React.forwardRef<
         fontFamily: 'inherit',
         whiteSpace: 'nowrap',
         transition: 'background 130ms ease-out, border-color 130ms ease-out, color 130ms ease-out, box-shadow 130ms ease-out',
-        boxShadow: open ? '0 0 12px rgba(216,255,47,0.1)' : 'none',
-        transform: hovered && !open && !active ? 'translateY(-1px)' : 'translateY(0)',
+        boxShadow: 'none',
+        transform: 'none',
       }}
     >
       <span style={{
-        color: open || active ? 'rgba(216,255,47,0.65)' : hovered ? 'rgba(245,247,250,0.55)' : 'var(--text-muted)',
+        color: open || active ? 'var(--accent)' : 'var(--text-muted)',
         fontSize: '11px',
         fontWeight: 500,
         transition: 'color 130ms ease-out',
@@ -325,7 +327,7 @@ const FilterChipButton = React.forwardRef<
         {prefix}
       </span>
       {value && (
-        <span style={{ color: open ? 'var(--accent)' : active ? 'var(--accent-soft)' : 'var(--text-primary)', fontWeight: 600 }}>
+        <span style={{ color: open || active ? 'var(--accent)' : 'var(--text-primary)', fontWeight: 600 }}>
           {value}
         </span>
       )}
@@ -339,16 +341,16 @@ const FilterChipButton = React.forwardRef<
             width: '14px',
             height: '14px',
             borderRadius: '3px',
-            background: 'rgba(216,255,47,0.15)',
+            background: 'var(--accent-ring)',
             cursor: 'pointer',
             marginLeft: '1px',
             transition: 'background 120ms ease-out',
           }}
           onMouseEnter={e => {
-            ;(e.currentTarget as HTMLElement).style.background = 'rgba(216,255,47,0.3)'
+            ;(e.currentTarget as HTMLElement).style.background = 'var(--accent-ring-focus)'
           }}
           onMouseLeave={e => {
-            ;(e.currentTarget as HTMLElement).style.background = 'rgba(216,255,47,0.15)'
+            ;(e.currentTarget as HTMLElement).style.background = 'var(--accent-ring)'
           }}
         >
           <X size={9} style={{ color: 'var(--accent)' }} />
@@ -357,7 +359,7 @@ const FilterChipButton = React.forwardRef<
         <ChevronDown
           size={12}
           style={{
-            color: open || active ? 'var(--accent)' : hovered ? 'rgba(245,247,250,0.5)' : 'var(--text-muted)',
+            color: open || active ? 'var(--accent)' : hovered ? 'var(--text-secondary)' : 'var(--text-muted)',
             transform: open ? 'rotate(180deg)' : 'none',
             transition: 'transform 180ms ease-out, color 130ms ease-out',
           }}

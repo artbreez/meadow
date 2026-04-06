@@ -1,59 +1,68 @@
 'use client'
 import { useState } from 'react'
-import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Legend
-} from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { motion } from 'framer-motion'
 import { timeSeries } from '@/lib/data'
 import { formatNumber, formatCurrency } from '@/lib/utils'
+import { useTheme } from '@/lib/theme'
+import { useMouseGlow } from '@/lib/useMouseGlow'
 
 type Metric = 'reach' | 'spend' | 'engagements'
 
-const metricConfig: Record<Metric, { label: string; color: string; format: (n: number) => string }> = {
-  reach: { label: 'Reach', color: '#d8ff2f', format: formatNumber },
-  spend: { label: 'Spend', color: 'rgba(125,211,252,0.9)', format: formatCurrency },
-  engagements: { label: 'Engagements', color: 'rgba(192,132,252,0.9)', format: formatNumber },
+interface MetricDef { label: string; color: string; fillStart: string; fillEnd: string; format: (n: number) => string }
+
+function useChartColors() {
+  const { theme } = useTheme()
+  const dark = theme === 'dark'
+  return {
+    reach:       { label: 'Reach',        color: dark ? '#d8ff2f' : '#4d7a00', fillStart: dark ? 'rgba(216,255,47,0.22)' : 'rgba(77,122,0,0.16)', fillEnd: 'transparent', format: formatNumber },
+    spend:       { label: 'Spend',        color: dark ? 'rgba(125,211,252,0.9)' : 'rgba(37,99,235,0.85)', fillStart: dark ? 'rgba(125,211,252,0.16)' : 'rgba(37,99,235,0.09)', fillEnd: 'transparent', format: formatCurrency },
+    engagements: { label: 'Engagements', color: dark ? 'rgba(192,132,252,0.9)' : 'rgba(109,40,217,0.85)', fillStart: dark ? 'rgba(192,132,252,0.16)' : 'rgba(109,40,217,0.09)', fillEnd: 'transparent', format: formatNumber },
+  } as Record<Metric, MetricDef>
 }
 
-const CustomTooltip = ({ active, payload, label }: {
+function CustomTooltip({ active, payload, label, colors }: {
   active?: boolean
-  payload?: { name: string; value: number; color: string }[]
+  payload?: { name: string; value: number }[]
   label?: string
-}) => {
+  colors: Record<Metric, MetricDef>
+}) {
   if (!active || !payload?.length) return null
   return (
     <div
       style={{
-        background: 'var(--bg-elevated)',
-        border: '1px solid var(--border-strong)',
+        background: 'var(--chart-tooltip-bg)',
+        border: '1px solid var(--chart-tooltip-border)',
         borderRadius: '10px',
         padding: '10px 14px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
         minWidth: '160px',
       }}
     >
       <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 500 }}>{label}</p>
-      {payload.map((entry) => (
-        <div key={entry.name} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '4px' }}>
-          <span style={{ fontSize: '12px', color: entry.color, fontWeight: 500 }}>{entry.name}</span>
-          <span className="tabular-nums" style={{ fontSize: '12px', color: 'var(--text-primary)', fontWeight: 700 }}>
-            {metricConfig[entry.name.toLowerCase() as Metric]?.format(entry.value) ?? entry.value}
-          </span>
-        </div>
-      ))}
+      {payload.map(entry => {
+        const key = entry.name.toLowerCase() as Metric
+        const def = colors[key]
+        return (
+          <div key={entry.name} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '4px' }}>
+            <span style={{ fontSize: '12px', color: def?.color ?? 'var(--text-muted)', fontWeight: 500 }}>{entry.name}</span>
+            <span className="tabular-nums" style={{ fontSize: '12px', color: 'var(--text-primary)', fontWeight: 700 }}>
+              {def?.format(entry.value) ?? entry.value}
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }
 
 export function PerformanceChart() {
   const [active, setActive] = useState<Metric[]>(['reach', 'spend'])
+  const colors = useChartColors()
+  const { theme } = useTheme()
 
-  const toggle = (m: Metric) => {
-    setActive(prev =>
-      prev.includes(m) ? (prev.length > 1 ? prev.filter(x => x !== m) : prev) : [...prev, m]
-    )
-  }
+  const toggle = (m: Metric) =>
+    setActive(prev => prev.includes(m) ? (prev.length > 1 ? prev.filter(x => x !== m) : prev) : [...prev, m])
 
   return (
     <motion.div
@@ -70,7 +79,6 @@ export function PerformanceChart() {
         gap: '16px',
       }}
     >
-      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
           <h3 style={{ fontSize: '15px', fontWeight: 650, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>
@@ -80,10 +88,8 @@ export function PerformanceChart() {
             Oct 2024 – Mar 2025 · 6-month view
           </p>
         </div>
-
-        {/* Metric toggles */}
         <div style={{ display: 'flex', gap: '6px' }}>
-          {(Object.keys(metricConfig) as Metric[]).map(m => (
+          {(Object.keys(colors) as Metric[]).map(m => (
             <button
               key={m}
               onClick={() => toggle(m)}
@@ -93,7 +99,7 @@ export function PerformanceChart() {
                 gap: '5px',
                 padding: '4px 10px',
                 borderRadius: '7px',
-                background: active.includes(m) ? 'rgba(255,255,255,0.05)' : 'transparent',
+                background: active.includes(m) ? 'var(--bg-elevated)' : 'transparent',
                 border: `1px solid ${active.includes(m) ? 'var(--border-strong)' : 'transparent'}`,
                 color: active.includes(m) ? 'var(--text-secondary)' : 'var(--text-faint)',
                 fontSize: '12px',
@@ -104,98 +110,43 @@ export function PerformanceChart() {
                 transition: 'all 160ms ease-out',
               }}
             >
-              <span
-                style={{
-                  width: '7px',
-                  height: '7px',
-                  borderRadius: '50%',
-                  background: active.includes(m) ? metricConfig[m].color : 'var(--text-faint)',
-                  flexShrink: 0,
-                }}
-              />
-              {metricConfig[m].label}
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: active.includes(m) ? colors[m].color : 'var(--text-faint)', flexShrink: 0 }} />
+              {colors[m].label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Chart */}
       <div style={{ height: '220px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={timeSeries} margin={{ top: 4, right: 0, bottom: 0, left: -10 }}>
             <defs>
-              <linearGradient id="reachGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#d8ff2f" stopOpacity={0.2} />
-                <stop offset="100%" stopColor="#d8ff2f" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="spendGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7dd3fc" stopOpacity={0.15} />
-                <stop offset="100%" stopColor="#7dd3fc" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="engGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#c084fc" stopOpacity={0.15} />
-                <stop offset="100%" stopColor="#c084fc" stopOpacity={0} />
-              </linearGradient>
+              {(Object.keys(colors) as Metric[]).map(m => (
+                <linearGradient key={m} id={`grad-${m}-${theme}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={colors[m].fillStart} />
+                  <stop offset="100%" stopColor={colors[m].fillEnd} stopOpacity={0} />
+                </linearGradient>
+              ))}
             </defs>
-            <CartesianGrid
-              strokeDasharray="1 4"
-              stroke="rgba(255,255,255,0.05)"
-              vertical={false}
+            <CartesianGrid strokeDasharray="1 4" stroke="var(--chart-grid)" vertical={false} />
+            <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--chart-axis)', fontFamily: 'inherit' }} axisLine={false} tickLine={false} dy={6} />
+            <YAxis tick={{ fontSize: 10, fill: 'var(--chart-axis)', fontFamily: 'inherit' }} axisLine={false} tickLine={false}
+              tickFormatter={v => active.includes('spend') && !active.includes('reach') ? `$${(v / 1000).toFixed(0)}K` : v >= 1000000 ? `${(v / 1000000).toFixed(0)}M` : String(v)}
             />
-            <XAxis
-              dataKey="month"
-              tick={{ fontSize: 11, fill: 'rgba(245,247,250,0.38)', fontFamily: 'inherit' }}
-              axisLine={false}
-              tickLine={false}
-              dy={6}
-            />
-            <YAxis
-              tick={{ fontSize: 10, fill: 'rgba(245,247,250,0.3)', fontFamily: 'inherit' }}
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(v) => {
-                if (active.includes('reach') && v >= 1000000) return `${(v / 1000000).toFixed(0)}M`
-                if (active.includes('spend') && v >= 1000) return `$${(v / 1000).toFixed(0)}K`
-                return String(v)
-              }}
-            />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
-            {active.includes('reach') && (
+            <Tooltip content={<CustomTooltip colors={colors} />} cursor={{ stroke: 'var(--border-strong)', strokeWidth: 1 }} />
+            {(Object.keys(colors) as Metric[]).map(m => active.includes(m) && (
               <Area
+                key={m}
                 type="monotone"
-                dataKey="reach"
-                name="Reach"
-                stroke="#d8ff2f"
-                strokeWidth={2}
-                fill="url(#reachGrad)"
+                dataKey={m}
+                name={colors[m].label}
+                stroke={colors[m].color}
+                strokeWidth={m === 'reach' ? 2 : 1.5}
+                fill={`url(#grad-${m}-${theme})`}
                 dot={false}
-                activeDot={{ r: 4, fill: '#d8ff2f', strokeWidth: 0 }}
+                activeDot={{ r: m === 'reach' ? 4 : 3, fill: colors[m].color, strokeWidth: 0 }}
               />
-            )}
-            {active.includes('spend') && (
-              <Area
-                type="monotone"
-                dataKey="spend"
-                name="Spend"
-                stroke="rgba(125,211,252,0.8)"
-                strokeWidth={1.5}
-                fill="url(#spendGrad)"
-                dot={false}
-                activeDot={{ r: 3, fill: '#7dd3fc', strokeWidth: 0 }}
-              />
-            )}
-            {active.includes('engagements') && (
-              <Area
-                type="monotone"
-                dataKey="engagements"
-                name="Engagements"
-                stroke="rgba(192,132,252,0.8)"
-                strokeWidth={1.5}
-                fill="url(#engGrad)"
-                dot={false}
-                activeDot={{ r: 3, fill: '#c084fc', strokeWidth: 0 }}
-              />
-            )}
+            ))}
           </AreaChart>
         </ResponsiveContainer>
       </div>

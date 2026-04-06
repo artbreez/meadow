@@ -32,17 +32,18 @@ export function Button({ variant = 'secondary', size = 'md', children, icon, sty
 
   const variants: Record<string, React.CSSProperties> = {
     primary: {
-      background: hovered ? 'var(--accent-soft)' : 'var(--accent)',
+      background: 'var(--accent-bg)',
       color: '#0a0a0a',
-      boxShadow: hovered && !pressed ? '0 0 16px rgba(216,255,47,0.25)' : 'none',
+      boxShadow: hovered && !pressed ? '0 0 18px var(--accent-glow)' : 'none',
+      opacity: hovered ? 0.92 : 1,
     },
     secondary: {
       background: hovered ? 'var(--bg-hover)' : 'var(--bg-elevated)',
       color: hovered ? 'var(--text-primary)' : 'var(--text-secondary)',
-      border: `1px solid ${hovered ? 'rgba(255,255,255,0.12)' : 'var(--border-strong)'}`,
+      border: `1px solid ${hovered ? 'var(--border-strong)' : 'var(--border)'}`,
     },
     ghost: {
-      background: hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
+      background: hovered ? 'var(--bg-hover)' : 'transparent',
       color: hovered ? 'var(--text-secondary)' : 'var(--text-muted)',
     },
   }

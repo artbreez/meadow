@@ -1,4 +1,5 @@
 'use client'
+import { useRef, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { TrendingUp, TrendingDown } from 'lucide-react'
 
@@ -14,46 +15,65 @@ interface MetricCardProps {
 }
 
 export function MetricCard({ label, value, delta, deltaPositive, note, accent, index = 0, icon }: MetricCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [mouse, setMouse] = useState({ x: 0, y: 0 })
+  const [hovered, setHovered] = useState(false)
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }, [])
+
+  const glowBg = hovered
+    ? `radial-gradient(220px circle at ${mouse.x}px ${mouse.y}px, var(--card-glow-color), transparent 70%), var(--bg-card)`
+    : accent
+    ? 'var(--bg-card)'
+    : 'var(--bg-card)'
+
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.06, ease: [0.25, 0.1, 0.25, 1] }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
-        background: accent ? 'rgba(216,255,47,0.04)' : 'var(--bg-card)',
-        border: `1px solid ${accent ? 'rgba(216,255,47,0.18)' : 'var(--border)'}`,
+        background: glowBg,
+        border: `1px solid ${accent && hovered ? 'var(--accent-ring)' : accent ? 'var(--accent-ring)' : hovered ? 'var(--border-strong)' : 'var(--border)'}`,
         borderRadius: '18px',
         padding: '22px 24px',
         display: 'flex',
         flexDirection: 'column',
         gap: '10px',
-        transition: 'all 200ms ease-out',
+        transition: 'border-color 200ms ease-out, box-shadow 200ms ease-out',
         cursor: 'default',
         position: 'relative',
         overflow: 'hidden',
-      }}
-      whileHover={{
-        background: accent
-          ? 'rgba(216,255,47,0.07)'
-          : 'rgba(255,255,255,0.02)',
-        borderColor: accent ? 'rgba(216,255,47,0.28)' : 'rgba(255,255,255,0.1)',
-        y: -1,
-        transition: { duration: 0.15 },
+        boxShadow: accent && hovered
+          ? '0 0 0 0.5px var(--accent-ring), 0 8px 32px rgba(0,0,0,0.08)'
+          : hovered
+          ? '0 8px 32px rgba(0,0,0,0.06)'
+          : 'none',
       }}
     >
-      {/* Subtle glow for accent cards */}
+      {/* Ambient accent glow */}
       {accent && (
         <div
           style={{
             position: 'absolute',
-            top: '-30px',
-            right: '-30px',
-            width: '90px',
-            height: '90px',
+            top: '-24px',
+            right: '-24px',
+            width: '80px',
+            height: '80px',
             borderRadius: '50%',
             background: 'var(--accent-glow)',
-            filter: 'blur(30px)',
+            filter: 'blur(28px)',
             pointerEvents: 'none',
+            opacity: hovered ? 1.2 : 0.8,
+            transition: 'opacity 200ms ease-out',
           }}
         />
       )}
@@ -65,14 +85,14 @@ export function MetricCard({ label, value, delta, deltaPositive, note, accent, i
             fontSize: '12px',
             fontWeight: 500,
             color: 'var(--text-muted)',
-            letterSpacing: '0.02em',
+            letterSpacing: '0.03em',
             textTransform: 'uppercase',
           }}
         >
           {label}
         </span>
         {icon && (
-          <span style={{ color: accent ? 'var(--accent)' : 'var(--text-faint)', opacity: 0.7 }}>
+          <span style={{ color: accent ? 'var(--accent)' : 'var(--text-faint)', opacity: 0.8 }}>
             {icon}
           </span>
         )}
@@ -102,8 +122,8 @@ export function MetricCard({ label, value, delta, deltaPositive, note, accent, i
               gap: '3px',
               fontSize: '12px',
               fontWeight: 600,
-              color: deltaPositive ? '#4ade80' : '#ff6b6b',
-              background: deltaPositive ? 'rgba(74,222,128,0.1)' : 'rgba(255,107,107,0.1)',
+              color: deltaPositive ? 'var(--success)' : 'var(--danger)',
+              background: deltaPositive ? 'var(--success-bg)' : 'var(--danger-bg)',
               padding: '2px 7px',
               borderRadius: '5px',
             }}

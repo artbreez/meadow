@@ -38,10 +38,10 @@ const NOTIFS = [
 ]
 
 const iconMap = {
-  warning: <AlertTriangle size={13} style={{ color: '#f5a623' }} />,
-  success: <CheckCircle size={13} style={{ color: '#4ade80' }} />,
-  info:    <Zap size={13} style={{ color: '#7dd3fc' }} />,
-  neutral: <Bell size={13} style={{ color: 'rgba(245,247,250,0.3)' }} />,
+  warning: <AlertTriangle size={13} style={{ color: 'var(--warning)' }} />,
+  success: <CheckCircle size={13} style={{ color: 'var(--success)' }} />,
+  info:    <Zap size={13} style={{ color: 'var(--info)' }} />,
+  neutral: <Bell size={13} style={{ color: 'var(--text-faint)' }} />,
 }
 
 interface NotificationsDropdownProps {
@@ -65,7 +65,7 @@ export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '12px 14px 8px',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          borderBottom: '1px solid var(--border)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
@@ -78,7 +78,7 @@ export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
                 padding: '1px 7px',
                 borderRadius: '5px',
                 background: 'var(--accent-glow)',
-                border: '1px solid rgba(216,255,47,0.25)',
+                border: '1px solid var(--accent-ring)',
                 fontSize: '11px',
                 fontWeight: 700,
                 color: 'var(--accent)',
@@ -119,7 +119,7 @@ export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: '6px 6px 6px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ padding: '6px 6px 6px', borderTop: '1px solid var(--border)' }}>
         <button
           onMouseEnter={() => setFooterHovered(true)}
           onMouseLeave={() => setFooterHovered(false)}
@@ -127,8 +127,8 @@ export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
             width: '100%',
             padding: '8px',
             borderRadius: '9px',
-            background: footerHovered ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
-            border: `1px solid ${footerHovered ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)'}`,
+            background: footerHovered ? 'var(--bg-elevated)' : 'transparent',
+            border: `1px solid ${footerHovered ? 'var(--border-strong)' : 'var(--border)'}`,
             color: footerHovered ? 'var(--text-secondary)' : 'var(--text-muted)',
             fontSize: '12.5px',
             fontWeight: 500,
@@ -157,9 +157,9 @@ function NotifRow({ notif }: { notif: typeof NOTIFS[0] }) {
         padding: '9px 10px',
         borderRadius: '9px',
         background: hovered
-          ? 'rgba(255,255,255,0.05)'
+          ? 'var(--bg-hover)'
           : notif.unread
-          ? 'rgba(255,255,255,0.025)'
+          ? 'var(--bg-elevated)'
           : 'transparent',
         cursor: 'default',
         transition: 'background 130ms ease-out',
