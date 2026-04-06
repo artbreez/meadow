@@ -78,10 +78,10 @@ export function DropdownPanel({
             left: pos.left,
             zIndex: 9999,
             width,
-            background: '#16191c',
+            background: 'var(--bg-elevated)',
             border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '14px',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.03)',
             overflow: 'hidden',
           }}
         >
@@ -166,8 +166,11 @@ export function DropdownItem({
               ? '#ff6b6b'
               : selected
               ? 'var(--accent)'
+              : hovered
+              ? 'var(--text-secondary)'
               : 'var(--text-muted)',
             flexShrink: 0,
+            transition: 'color 130ms ease-out',
           }}
         >
           {icon}
@@ -177,15 +180,22 @@ export function DropdownItem({
         <div
           style={{
             fontSize: '13px',
-            fontWeight: selected ? 600 : 450,
-            color: danger ? '#ff6b6b' : selected ? 'var(--accent)' : 'var(--text-secondary)',
+            fontWeight: selected ? 600 : hovered ? 500 : 450,
+            color: danger
+              ? '#ff6b6b'
+              : selected
+              ? 'var(--accent)'
+              : hovered
+              ? 'var(--text-primary)'
+              : 'var(--text-secondary)',
             lineHeight: 1.3,
+            transition: 'color 130ms ease-out',
           }}
         >
           {label}
         </div>
         {sub && (
-          <div style={{ fontSize: '11px', color: 'var(--text-faint)', marginTop: '1px' }}>
+          <div style={{ fontSize: '11px', color: hovered ? 'var(--text-muted)' : 'var(--text-faint)', marginTop: '1px', transition: 'color 130ms ease-out' }}>
             {sub}
           </div>
         )}

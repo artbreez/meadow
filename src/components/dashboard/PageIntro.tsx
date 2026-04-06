@@ -293,7 +293,7 @@ const FilterChipButton = React.forwardRef<
           : active
           ? 'rgba(216,255,47,0.06)'
           : hovered
-          ? 'rgba(255,255,255,0.04)'
+          ? '#1e2226'
           : 'var(--bg-card)',
         border: `1px solid ${
           open
@@ -301,21 +301,27 @@ const FilterChipButton = React.forwardRef<
             : active
             ? 'rgba(216,255,47,0.2)'
             : hovered
-            ? 'rgba(255,255,255,0.1)'
+            ? 'rgba(255,255,255,0.16)'
             : 'var(--border)'
         }`,
-        color: open || active ? 'var(--accent)' : 'var(--text-secondary)',
+        color: open || active ? 'var(--accent)' : hovered ? '#f5f7fa' : 'var(--text-secondary)',
         fontSize: '13px',
         fontWeight: 500,
         cursor: 'pointer',
         outline: 'none',
         fontFamily: 'inherit',
         whiteSpace: 'nowrap',
-        transition: 'all 150ms ease-out',
+        transition: 'background 130ms ease-out, border-color 130ms ease-out, color 130ms ease-out, box-shadow 130ms ease-out',
         boxShadow: open ? '0 0 12px rgba(216,255,47,0.1)' : 'none',
+        transform: hovered && !open && !active ? 'translateY(-1px)' : 'translateY(0)',
       }}
     >
-      <span style={{ color: open || active ? 'rgba(216,255,47,0.65)' : 'var(--text-muted)', fontSize: '11px', fontWeight: 500 }}>
+      <span style={{
+        color: open || active ? 'rgba(216,255,47,0.65)' : hovered ? 'rgba(245,247,250,0.55)' : 'var(--text-muted)',
+        fontSize: '11px',
+        fontWeight: 500,
+        transition: 'color 130ms ease-out',
+      }}>
         {prefix}
       </span>
       {value && (
@@ -351,9 +357,9 @@ const FilterChipButton = React.forwardRef<
         <ChevronDown
           size={12}
           style={{
-            color: open || active ? 'var(--accent)' : 'var(--text-muted)',
+            color: open || active ? 'var(--accent)' : hovered ? 'rgba(245,247,250,0.5)' : 'var(--text-muted)',
             transform: open ? 'rotate(180deg)' : 'none',
-            transition: 'transform 180ms ease-out',
+            transition: 'transform 180ms ease-out, color 130ms ease-out',
           }}
         />
       )}

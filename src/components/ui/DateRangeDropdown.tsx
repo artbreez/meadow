@@ -2,6 +2,34 @@
 import { useState } from 'react'
 import { DropdownSection, DropdownItem, DropdownLabel } from './DropdownPanel'
 
+function ApplyButton({ onClick }: { onClick: () => void }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        marginTop: '2px',
+        padding: '7px 12px',
+        borderRadius: '8px',
+        background: hovered ? 'var(--accent-soft)' : 'var(--accent)',
+        border: 'none',
+        color: '#0a0a0a',
+        fontSize: '12.5px',
+        fontWeight: 600,
+        cursor: 'pointer',
+        fontFamily: 'inherit',
+        transition: 'background 130ms ease-out, box-shadow 130ms ease-out',
+        boxShadow: hovered ? '0 0 14px rgba(216,255,47,0.25)' : 'none',
+        width: '100%',
+      }}
+    >
+      Apply range
+    </button>
+  )
+}
+
 const PRESETS = [
   { label: 'Last 7 days', value: 'last-7' },
   { label: 'Last 30 days', value: 'last-30' },
@@ -77,24 +105,7 @@ export function DateRangeDropdown({ selected, onSelect }: DateRangeDropdownProps
               }}
             />
           </div>
-          <button
-            onClick={() => onSelect('custom', `${fromVal} – ${toVal}`)}
-            style={{
-              marginTop: '2px',
-              padding: '6px 12px',
-              borderRadius: '8px',
-              background: 'var(--accent)',
-              border: 'none',
-              color: '#0a0a0a',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-              transition: 'opacity 140ms ease-out',
-            }}
-          >
-            Apply range
-          </button>
+          <ApplyButton onClick={() => onSelect('custom', `${fromVal} – ${toVal}`)} />
         </div>
       </DropdownSection>
     </div>

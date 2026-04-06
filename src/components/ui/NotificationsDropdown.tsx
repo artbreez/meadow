@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { AlertTriangle, CheckCircle, Bell, Info, Zap } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Bell, Zap } from 'lucide-react'
 
 const NOTIFS = [
   {
@@ -40,15 +40,8 @@ const NOTIFS = [
 const iconMap = {
   warning: <AlertTriangle size={13} style={{ color: '#f5a623' }} />,
   success: <CheckCircle size={13} style={{ color: '#4ade80' }} />,
-  info: <Zap size={13} style={{ color: '#7dd3fc' }} />,
-  neutral: <Bell size={13} style={{ color: 'var(--text-muted)' }} />,
-}
-
-const bgMap = {
-  warning: 'rgba(245,166,35,0.08)',
-  success: 'rgba(74,222,128,0.08)',
-  info: 'rgba(125,211,252,0.08)',
-  neutral: 'transparent',
+  info:    <Zap size={13} style={{ color: '#7dd3fc' }} />,
+  neutral: <Bell size={13} style={{ color: 'rgba(245,247,250,0.3)' }} />,
 }
 
 interface NotificationsDropdownProps {
@@ -58,6 +51,8 @@ interface NotificationsDropdownProps {
 export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
   const [items, setItems] = useState(NOTIFS)
   const unreadCount = items.filter(n => n.unread).length
+  const [markHovered, setMarkHovered] = useState(false)
+  const [footerHovered, setFooterHovered] = useState(false)
 
   const markAllRead = () => setItems(i => i.map(n => ({ ...n, unread: false })))
 
@@ -74,11 +69,13 @@ export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-          <span style={{ fontSize: '13px', fontWeight: 650, color: 'var(--text-primary)' }}>Notifications</span>
+          <span style={{ fontSize: '13px', fontWeight: 650, color: 'var(--text-primary)' }}>
+            Notifications
+          </span>
           {unreadCount > 0 && (
             <span
               style={{
-                padding: '1px 6px',
+                padding: '1px 7px',
                 borderRadius: '5px',
                 background: 'var(--accent-glow)',
                 border: '1px solid rgba(216,255,47,0.25)',
@@ -94,16 +91,19 @@ export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
         {unreadCount > 0 && (
           <button
             onClick={markAllRead}
+            onMouseEnter={() => setMarkHovered(true)}
+            onMouseLeave={() => setMarkHovered(false)}
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--text-muted)',
-              fontSize: '11.5px',
+              color: markHovered ? 'var(--text-secondary)' : 'var(--text-muted)',
+              fontSize: '12px',
+              fontWeight: 500,
               cursor: 'pointer',
               fontFamily: 'inherit',
-              padding: '2px 4px',
-              borderRadius: '4px',
-              transition: 'color 140ms ease-out',
+              padding: '3px 6px',
+              borderRadius: '5px',
+              transition: 'color 130ms ease-out',
             }}
           >
             Mark all read
@@ -119,25 +119,22 @@ export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
       </div>
 
       {/* Footer */}
-      <div
-        style={{
-          padding: '8px 14px',
-          borderTop: '1px solid rgba(255,255,255,0.06)',
-        }}
-      >
+      <div style={{ padding: '6px 6px 6px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <button
+          onMouseEnter={() => setFooterHovered(true)}
+          onMouseLeave={() => setFooterHovered(false)}
           style={{
             width: '100%',
-            padding: '7px',
-            borderRadius: '8px',
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            color: 'var(--text-muted)',
-            fontSize: '12px',
+            padding: '8px',
+            borderRadius: '9px',
+            background: footerHovered ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
+            border: `1px solid ${footerHovered ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)'}`,
+            color: footerHovered ? 'var(--text-secondary)' : 'var(--text-muted)',
+            fontSize: '12.5px',
             fontWeight: 500,
             cursor: 'pointer',
             fontFamily: 'inherit',
-            transition: 'all 140ms ease-out',
+            transition: 'all 130ms ease-out',
           }}
         >
           View all notifications
@@ -149,6 +146,7 @@ export function NotificationsDropdown({ onClose }: NotificationsDropdownProps) {
 
 function NotifRow({ notif }: { notif: typeof NOTIFS[0] }) {
   const [hovered, setHovered] = useState(false)
+
   return (
     <div
       onMouseEnter={() => setHovered(true)}
@@ -158,9 +156,13 @@ function NotifRow({ notif }: { notif: typeof NOTIFS[0] }) {
         gap: '10px',
         padding: '9px 10px',
         borderRadius: '9px',
-        background: hovered ? 'rgba(255,255,255,0.04)' : notif.unread ? bgMap[notif.type] : 'transparent',
+        background: hovered
+          ? 'rgba(255,255,255,0.05)'
+          : notif.unread
+          ? 'rgba(255,255,255,0.025)'
+          : 'transparent',
         cursor: 'default',
-        transition: 'background 140ms ease-out',
+        transition: 'background 130ms ease-out',
         position: 'relative',
       }}
     >
@@ -168,24 +170,42 @@ function NotifRow({ notif }: { notif: typeof NOTIFS[0] }) {
         <span
           style={{
             position: 'absolute',
-            top: '13px',
+            top: '11px',
             right: '10px',
             width: '5px',
             height: '5px',
             borderRadius: '50%',
             background: 'var(--accent)',
+            flexShrink: 0,
           }}
         />
       )}
       <div style={{ marginTop: '1px', flexShrink: 0 }}>{iconMap[notif.type]}</div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: '12.5px', fontWeight: notif.unread ? 600 : 450, color: 'var(--text-secondary)', margin: '0 0 2px', lineHeight: 1.3 }}>
+      <div style={{ flex: 1, minWidth: 0, paddingRight: '12px' }}>
+        <p
+          style={{
+            fontSize: '13px',
+            fontWeight: notif.unread ? 600 : 450,
+            color: notif.unread ? 'var(--text-primary)' : 'var(--text-secondary)',
+            margin: '0 0 3px',
+            lineHeight: 1.35,
+          }}
+        >
           {notif.title}
         </p>
-        <p style={{ fontSize: '11.5px', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>
+        <p
+          style={{
+            fontSize: '12px',
+            color: 'var(--text-muted)',
+            margin: 0,
+            lineHeight: 1.45,
+          }}
+        >
           {notif.body}
         </p>
-        <p style={{ fontSize: '11px', color: 'var(--text-faint)', margin: '3px 0 0' }}>{notif.time}</p>
+        <p style={{ fontSize: '11px', color: 'var(--text-faint)', margin: '4px 0 0' }}>
+          {notif.time}
+        </p>
       </div>
     </div>
   )
